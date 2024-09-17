@@ -6,12 +6,6 @@ from jose import jwt
 from urllib.request import urlopen
 import os
 
-
-"""
-https://fsnd-kml.auth0.com/authorize?audience=capstone&response_type=token&client_id=QgmGth71OqndSVlCJ6YIAFir6t2EAt48&redirect_uri=http://localhost:8100/login-results
-https://fsnd-kml.auth0.com/.well-known/jwks.json
-"""
-
 AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
 ALGORITHMS = [os.environ['ALGORITHMS']]
 API_AUDIENCE = os.environ['API_AUDIENCE']
