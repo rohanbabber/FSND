@@ -29,7 +29,7 @@ The project adheres to the PEP 8 style guide and follows common best practices, 
 
 - [PostgreSQL](https://www.postgresql.org/) this project is integrated with a popular relational database PostgreSQL, though other relational databases can be used with a little effort.
 
-- [Heroku](https://www.heroku.com/what) is the cloud platform used for deployment
+- [Render](https://www.render.com/about) is the cloud platform used for deployment
 
 
 ### Running Locally
@@ -158,6 +158,18 @@ For more details [look at the documentation (31.1.1.2. Connection URIs)](https:/
     ```
 
     Optionally, you can use `run.sh` script.
+
+### Render Deployment Details
+
+Use the following link to access the live running app
+
+```
+https://fsnd-tezu.onrender.com
+```
+Authentication tokens for different roles and their respective permission can be found in auth_config.json
+Copy the token value from auth_config.json for any role and put in request authorization header as Bearer Token type in the postman client app 
+
+The details of Endpoint routes are mention below in the API documentation section
 
 ## API Documentation
 
