@@ -37,13 +37,18 @@ class AuthError(Exception):
 
 def get_token_auth_header():
     auth = request.headers.get('Authorization', None)
+    print(auth)
+    print('hello 1')
     if not auth:
+        print('hello 2')
         raise AuthError({
             'code': 'authorization_header_missing',
             'description': 'Authorization header is expected.'
         }, 401)
 
+    print('hello 3')
     parts = auth.split()
+    print('hello 4')
     if parts[0].lower() != 'bearer':
         raise AuthError({
             'code': 'invalid_header',
@@ -61,8 +66,9 @@ def get_token_auth_header():
             'code': 'invalid_header',
             'description': 'Authorization header must be bearer token.'
         }, 401)
-
+    print('hello 5')
     token = parts[1]
+    print(token)
     return token
 
 
@@ -81,17 +87,21 @@ def get_token_auth_header():
 
 
 def check_permissions(permission, payload):
+    print('hello 8')
     if 'permissions' not in payload:
+        print('hello 11')
         raise AuthError({
             'code': 'invalid_claims',
             'description': 'Permissions not included in JWT.'
         }, 400)
-
+    print('hello 9')
     if permission not in payload['permissions']:
+        print('hello 12')
         raise AuthError({
             'code': 'unauthorized',
             'description': 'Permission not found.'
         }, 403)
+    print('hello 10')
     return True
 
 
@@ -112,18 +122,26 @@ def check_permissions(permission, payload):
 
 
 def verify_decode_jwt(token):
+    print('hello 13')
+    print(token)
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
+    print(jwks)
+    print('hello 14')
     unverified_header = jwt.get_unverified_header(token)
+    print('hello 15')
     rsa_key = {}
     if 'kid' not in unverified_header:
+        print('hello 16')
         raise AuthError({
             'code': 'invalid_header',
             'description': 'Authorization malformed.'
         }, 401)
 
     for key in jwks['keys']:
+        print('hello 17')
         if key['kid'] == unverified_header['kid']:
+            print('hello 18')
             rsa_key = {
                 'kty': key['kty'],
                 'kid': key['kid'],
@@ -132,7 +150,9 @@ def verify_decode_jwt(token):
                 'e': key['e']
             }
     if rsa_key:
+        print('hello 19')
         try:
+            print('hello 20')
             payload = jwt.decode(
                 token,
                 rsa_key,
@@ -144,12 +164,14 @@ def verify_decode_jwt(token):
             return payload
 
         except jwt.ExpiredSignatureError:
+            print('hello 21')
             raise AuthError({
                 'code': 'token_expired',
                 'description': 'Token expired.'
             }, 401)
 
         except jwt.JWTClaimsError:
+            print('hello 22')
             message = 'Incorrect claims. Please, check the audience and issuer.'
             raise AuthError({
                 'code': 'invalid_claims',
@@ -157,11 +179,12 @@ def verify_decode_jwt(token):
             }, 401)
 
         except Exception:
+            print('hello 23')
             raise AuthError({
                 'code': 'invalid_header',
                 'description': 'Unable to parse authentication token.'
             }, 400)
-
+    print('hello 24')
     raise AuthError({
         'code': 'invalid_header',
         'description': 'Unable to find the appropriate key.'
@@ -186,9 +209,15 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
+            print('hello 26')
             token = get_token_auth_header()
+            print('hello 27')
+            print(token)
             payload = verify_decode_jwt(token)
+            print('hello 28')
+            print(payload)
             check_permissions(permission, payload)
+            print('hello 29')
             return f(payload, *args, **kwargs)
         return wrapper
     return requires_auth_decorator
